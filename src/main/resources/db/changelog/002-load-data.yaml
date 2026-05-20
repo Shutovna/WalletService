@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-load-data
+      author: shutovna
+      changes:
+        - insert:
+            tableName: wallet
+            columns:
+              - column:
+                  name: id
+                  value: fbb0d6b6-f4a4-4f33-92ad-874b69bd06e2
+              - column:
+                  name: amount
+                  value: 9000
+        - insert:
+            tableName: wallet
+            columns:
+              - column:
+                  name: id
+                  value: e9315e3d-c2f5-4b73-833a-1430472cdb74
+              - column:
+                  name: amount
+                  value: 0
+        - insert:
+            tableName: wallet
+            columns:
+              - column:
+                  name: id
+                  value: 755199fa-d01c-4773-b5a4-df155cfe7421
+              - column:
+                  name: amount
+                  value: 50000
+
+

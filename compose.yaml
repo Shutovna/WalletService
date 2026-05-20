@@ -1,0 +1,59 @@
+services:
+  # PostgreSQL database
+  db:
+    image: postgres:16
+    container_name: wallet-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: walletdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - ./src/main/resources/wallet-postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d walletdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - wallet-network
+
+  # Spring Boot application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: wallet-service
+    restart: unless-stopped
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      # Optional JVM settings
+      JAVA_OPTS: "-Xms4g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=100
+       -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -XX:+UseStringDeduplication 
+       -XX:+HeapDumpOnOutOfMemoryError"
+
+    ports:
+      - "8080:8080"
+
+    networks:
+      - wallet-network
+
+volumes:
+  postgres_data:
+
+networks:
+  wallet-network:
+    driver: bridge

@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-check-amount
+      author: shutovna
+      changes:
+        - sql:
+            sql: ALTER TABLE wallet ADD CONSTRAINT chk_positive_amount CHECK (amount > 0);
